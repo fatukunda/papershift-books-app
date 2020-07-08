@@ -1,32 +1,32 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
     <router-view />
+    <Footer />
   </div>
 </template>
 
-<style lang="scss">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
-
-#nav {
-  padding: 30px;
-
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-
-    &.router-link-exact-active {
-      color: #42b983;
+<script>
+import store from "./store";
+import axios from "axios";
+import router from "./router";
+import Footer from "./components/Footer";
+export default {
+  created() {
+    const isLoggedIn = localStorage.getItem("isLoggedIn");
+    const user = JSON.parse(localStorage.getItem("user"));
+    const token = localStorage.getItem("auth_token");
+    if (isLoggedIn) {
+      store.commit("authenticateUserSuccess", user);
+      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+      router.push("/books");
+    } else {
+      router.push("/");
     }
+  },
+  components: {
+    Footer
   }
-}
-</style>
+};
+</script>
+
+<style lang="scss"></style>
